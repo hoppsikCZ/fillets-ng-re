@@ -12,7 +12,7 @@
 #include "Room.h"
 #include "LoadException.h"
 #include "minmax.h"
-#include "Application.h"
+#include "GameClock.h"
 
 //-----------------------------------------------------------------
 LevelLoading::LevelLoading(RoomAccess *access) {
@@ -58,7 +58,7 @@ void LevelLoading::loadReplay(const std::string &moves) {
  * @throws LoadException for bad load
  */
 void LevelLoading::nextLoadAction() {
-    if (m_paused || tick % (speedup) != 0) {
+    if (m_paused || GameClock::instance()->getTick() % (GameClock::instance()->getSpeedup()) != 0) {
         return;
     }
 

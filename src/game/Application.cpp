@@ -32,11 +32,6 @@
 
 #include <stdio.h> // for fflush, stdout
 
-int tick = 0;
-int speedup = 5;
-int offset = -5;
-bool movingfish = false;
-
 //-----------------------------------------------------------------
 Application::Application() {
     m_quit = false;
@@ -82,7 +77,7 @@ void Application::init(int argc, char *argv[]) {
 //-----------------------------------------------------------------
 void Application::run() {
     while (!m_quit) {
-        ++tick;
+        GameClock::instance()->advanceTick();
         m_agents->update();
     }
 }

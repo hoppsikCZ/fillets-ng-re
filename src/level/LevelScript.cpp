@@ -21,7 +21,7 @@
 #include "level-script.h"
 
 #include <memory> // for auto_ptr
-#include "Application.h"
+#include "GameClock.h"
 //-----------------------------------------------------------------
 /**
  * Create new plan holder.
@@ -48,10 +48,10 @@ LevelScript::createCommand(int funcRef) {
  */
 void LevelScript::updateScript() {
     char luacom[64];
-    sprintf(luacom, "script_update(%d,%d)", tick, speedup);
+    sprintf(luacom, "script_update(%d,%d)", GameClock::instance()->getTick(), GameClock::instance()->getSpeedup());
     // printf("%s\n",luacom);
     m_script->doString(luacom);
-    if (tick % speedup == 0)
+    if (GameClock::instance()->getTick() % GameClock::instance()->getSpeedup() == 0)
         satisfyPlan();
 }
 

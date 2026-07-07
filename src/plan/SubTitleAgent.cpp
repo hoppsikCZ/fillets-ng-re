@@ -15,11 +15,13 @@
 #include "Path.h"
 #include "OptionAgent.h"
 #include "minmax.h"
+#include "GameClock.h"
 
 //-----------------------------------------------------------------
 void SubTitleAgent::own_init() {
     m_limitY = TITLE_LIMIT_Y;
     m_colors = new ResColorPack();
+    m_scrollAccum = 0;
 
     m_font = NULL;
     m_font = new Font(Path::dataReadPath("font/font_subtitle.ttf"), 20);
@@ -31,7 +33,17 @@ void SubTitleAgent::own_init() {
  */
 void SubTitleAgent::own_update() {
     if (!m_titles.empty()) {
-        shiftTitlesUp(TITLE_SPEED);
+        int sp = GameClock::instance()->getSpeedup();
+        m_scrollAccum += TITLE_SPEED;
+        while (m_scrollAccum >= sp) {
+            shiftTitlesUp(1);
+            m_scrollAccum -= sp;
+        }
+
+        t_titles::iterator end = m_titles.end();
+        for (t_titles::iterator i = m_titles.begin(); i != end; ++i) {
+            (*i)->tick();
+        }
 
         if (m_titles.front()->isGone()) {
             delete m_titles.front();

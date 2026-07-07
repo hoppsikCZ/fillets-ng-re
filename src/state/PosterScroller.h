@@ -6,6 +6,7 @@ class Path;
 class Picture;
 
 #include "PosterState.h"
+#include "GameClock.h"
 
 /**
  * Scroll very height picture.
@@ -15,6 +16,7 @@ private:
     static const int SHIFT_SPEED = 4;
     int m_shift;
     int m_screenH;
+    int m_scrollAccum;
 
 protected:
     virtual void own_initState();

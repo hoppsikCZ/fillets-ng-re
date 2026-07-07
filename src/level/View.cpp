@@ -16,7 +16,7 @@
 #include "Anim.h"
 #include "Dir.h"
 #include "minmax.h"
-#include "Application.h"
+#include "GameClock.h"
 
 //-----------------------------------------------------------------
 /**
@@ -65,8 +65,8 @@ void View::noteNewRound(int phases) {
 void View::drawOn(SDL_Surface *screen, SDL_Renderer *renderer) {
     m_screen = screen;
     m_animShift = min(SCALE, m_animShift + m_shiftSize);
-    if (!movingfish)
-        m_animShift = (tick - 1) % speedup * 3;
+    if (!GameClock::instance()->isMovingfish())
+        m_animShift = (GameClock::instance()->getTick() - 1) % GameClock::instance()->getSpeedup() * 3;
     m_models.drawOn(this, renderer);
     drawDecors();
 }

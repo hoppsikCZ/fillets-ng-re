@@ -65,7 +65,7 @@ Font::Font(const Path &file_ttf, int height) {
                                    .addInfo("file", file_ttf.getNative()));
     }
 
-    // NOTE: bg color will be set to be transparent
+    // NOTE: bg color will be set to be transparent via colorkey
     SDL_Color bg = {10, 10, 10, 0};
     m_bg = bg;
 }
@@ -125,17 +125,19 @@ Font::renderText(const std::string &text, const SDL_Color &color) const {
     }
 
     // NOTE: at index 0 is bg color
-    Uint32 key = SDL_MapRGB(raw_surface->format, m_bg.r, m_bg.g, m_bg.b);
-    if (SDL_SetColorKey(raw_surface, SDL_TRUE, key) < 0) {
+    if (SDL_SetColorKey(raw_surface, SDL_TRUE, 
+            SDL_MapRGB(raw_surface->format, m_bg.r, m_bg.g, m_bg.b)) < 0) {
         throw SDLException(ExInfo("SetColorKey"));
     }
 
     SDL_Surface *surface = SDL_ConvertSurfaceFormat(raw_surface, SDL_PIXELFORMAT_RGBA32, 0);
-    key = SDL_MapRGB(surface->format, m_bg.r, m_bg.g, m_bg.b);
-    SDL_SetColorKey(surface, SDL_TRUE, key);
     if (!surface) {
         throw SDLException(ExInfo("DisplayFormat"));
     }
+    // NOTE: after conversion, bg pixels have the palette's alpha (usually 0).
+    // Use SDL_MapRGBA with alpha=0 so the colorkey matches the actual pixels.
+    Uint32 bgKey = SDL_MapRGBA(surface->format, m_bg.r, m_bg.g, m_bg.b, 0);
+    SDL_SetColorKey(surface, SDL_TRUE, bgKey);
     SDL_FreeSurface(raw_surface);
 
     return surface;

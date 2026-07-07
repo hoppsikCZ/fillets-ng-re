@@ -34,6 +34,7 @@ public:
     Font *m_font;
     ResColorPack *m_colors;
     int m_limitY;
+    int m_scrollAccum;
 
 private:
     std::string splitAndCreate(const std::string &subtitle, const Color *color);

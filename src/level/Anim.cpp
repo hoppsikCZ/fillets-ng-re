@@ -19,7 +19,7 @@
 #include "EffectInvisible.h"
 #include "EffectReverse.h"
 #include "EffectZx.h"
-#include "Application.h"
+#include "GameClock.h"
 
 //-----------------------------------------------------------------
 /**
@@ -52,13 +52,13 @@ Anim::~Anim() {
  * Increase phase when anim is running.
  */
 void Anim::drawAt(SDL_Surface *screen, int x, int y, eSide side) {
-    x += offset;
-    y += offset;
+    x += GameClock::instance()->getOffset();
+    y += GameClock::instance()->getOffset();
     if (!m_effect->isInvisible()) {
         SDL_Surface *surface =
                 m_animPack[side]->getRes(m_animName, m_animPhase);
         m_effect->blit(screen, surface, x, y);
-        if (m_run && tick % speedup == 0) {
+        if (m_run && GameClock::instance()->getTick() % GameClock::instance()->getSpeedup() == 0) {
             m_animPhase++;
             if (m_animPhase >= m_animPack[side]->countRes(m_animName)) {
                 m_animPhase = 0;
@@ -140,7 +140,7 @@ void Anim::useSpecialAnim(const std::string &name, int phase) {
         return;
     }
 
-    int count = m_animPack[SIDE_LEFT]->countRes(name) * speedup;
+    int count = m_animPack[SIDE_LEFT]->countRes(name) * GameClock::instance()->getSpeedup();
     if (m_specialAnimPhase >= count) {
         if (count == 0) {
             m_specialAnimName = "";

@@ -37,7 +37,7 @@
 
 #include <stdio.h>
 #include <assert.h>
-#include "Application.h"
+#include "GameClock.h"
 //-----------------------------------------------------------------
 /**
  * Create new level.
@@ -95,7 +95,7 @@ void Level::own_initState() {
     m_loading->reset();
     // NOTE: let level first to draw and then play
     m_locker->reset();
-    m_locker->ensurePhases(1 * speedup);
+    m_locker->ensurePhases(1 * GameClock::instance()->getSpeedup());
     if (!isUndoing()) {
         SoundAgent::agent()->stopMusic();
     }
@@ -158,7 +158,7 @@ void Level::own_noteFg() {
         m_loading->togglePause();
     }
     // NOTE: ensure that an unwanted mouse press will not move a fish
-    m_locker->ensurePhases(3 * speedup);
+    m_locker->ensurePhases(3 * GameClock::instance()->getSpeedup());
 }
 
 //-----------------------------------------------------------------

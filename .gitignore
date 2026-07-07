@@ -18,4 +18,5 @@ solved
 list.txt
 cmake-build-debug/
 .idea/
-
+.vscode/
+build.sh

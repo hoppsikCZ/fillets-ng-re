@@ -19,7 +19,7 @@
 #include "OptionAgent.h"
 
 #include <assert.h>
-#include "Application.h"
+#include "GameClock.h"
 //-----------------------------------------------------------------
 /**
  * Create new rules for model.
@@ -85,7 +85,7 @@ void Rules::occupyNewPos() {
 
         V2 shift = Dir::dir2xy(m_dir);
         V2 oldLoc = m_model->getLocation();
-        if (tick % (speedup) == 0 || movingfish)
+        if (GameClock::instance()->getTick() % (GameClock::instance()->getSpeedup()) == 0 || GameClock::instance()->isMovingfish())
             m_model->change_setLocation(oldLoc.plus(shift));
 
         m_mask->mask();

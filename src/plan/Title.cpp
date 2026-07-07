@@ -46,6 +46,7 @@ Title::Title(int baseY, int finalY, int bonusTime, int limitY,
         m_mintime = TIME_MIN;
     }
     m_mintime += bonusTime;
+    m_mintime *= GameClock::instance()->getSpeedup();
 }
 
 //-----------------------------------------------------------------
@@ -67,14 +68,16 @@ void Title::drawOn(SDL_Surface *screen, SDL_Renderer *renderer) {
 //-----------------------------------------------------------------
 /**
  * Shift up until title is on limit.
- * Decrease m_mintime.
  */
 void Title::shiftUp(int rate) {
-    m_mintime--;
     m_y -= rate;
     if (m_y < m_finalY) {
         m_y = m_finalY;
     }
+}
+
+void Title::tick() {
+    m_mintime--;
 }
 
 //-----------------------------------------------------------------

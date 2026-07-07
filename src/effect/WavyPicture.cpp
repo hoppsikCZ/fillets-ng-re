@@ -11,7 +11,7 @@
 #include "TimerAgent.h"
 
 #include <math.h>
-#include "Application.h"
+#include "GameClock.h"
 //-----------------------------------------------------------------
 /**
  * Load surface.
@@ -44,15 +44,15 @@ void WavyPicture::drawOn(SDL_Surface *screen, SDL_Renderer *renderer) {
     pad.h = 1;
 
     float shift = TimerAgent::agent()->getCycles() * m_speed;
-    shift = shift / speedup;
+    shift = shift / GameClock::instance()->getSpeedup();
     for (int py = 0; py < m_surface->h; ++py) {
         // NOTE: C99 has lrintf and sinf
         Sint16 shiftX = static_cast<Sint16>(0.5 +
                                             m_amp * sin(py / m_periode + shift));
         line_rect.x = shiftX;
         line_rect.y = py;
-        dest_rect.x = m_loc.getX() + offset;
-        dest_rect.y = m_loc.getY() + py + offset;
+        dest_rect.x = m_loc.getX() + GameClock::instance()->getOffset();
+        dest_rect.y = m_loc.getY() + py + GameClock::instance()->getOffset();
         SDL_BlitSurface(m_surface, &line_rect, screen, &dest_rect);
 
         pad.x = (shiftX < 0) ? 0 : m_surface->w - shiftX;

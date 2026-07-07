@@ -6,6 +6,7 @@ class Font;
 class Color;
 
 #include "Drawable.h"
+#include "GameClock.h"
 
 #include <string>
 
@@ -33,6 +34,8 @@ public:
           Font *font, const Color *color);
 
     virtual ~Title();
+
+    void tick();
 
     void shiftUp(int rate);
 

@@ -34,7 +34,7 @@
 #include "Path.h"
 
 #include <assert.h>
-#include "Application.h"
+#include "GameClock.h"
 //-----------------------------------------------------------------
 /**
  * Create room holder.
@@ -252,7 +252,7 @@ bool Room::fallout(bool interactive) {
             if (outDepth > 0) {
                 wentOut = true;
                 if (interactive) {
-                    m_locker->ensurePhases(3 * speedup);
+                    m_locker->ensurePhases(3 * GameClock::instance()->getSpeedup());
                 }
             } else if (outDepth == -1) {
                 m_levelScript->interruptPlan();

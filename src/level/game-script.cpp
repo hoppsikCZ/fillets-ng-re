@@ -127,8 +127,8 @@ int script_game_addDecor(lua_State *L) throw() {
  */
 int script_game_setScreenShift(lua_State *L) throw() {
     BEGIN_NOEXCEPTION ;
-        int x = luaL_checkinteger(L, 1);
-        int y = luaL_checkinteger(L, 2);
+        int x = (int)luaL_checknumber(L, 1);
+        int y = (int)luaL_checknumber(L, 2);
         getLevelScript(L)->room()->setScreenShift(V2(x, y));
     END_NOEXCEPTION;
     return 0;

@@ -1,10 +1,7 @@
 #ifndef HEADER_APPLICATION_H
 #define HEADER_APPLICATION_H
-extern int tick;
-extern int speedup;
-extern int offset;
-extern int skip;
-extern bool movingfish;
+
+#include "GameClock.h"
 
 class AgentPack;
 
