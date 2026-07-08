@@ -110,7 +110,7 @@ void MenuOptions::prepareMenu() {
     vbox->addWidget(createImagesPanel(labels));
 
     IWidget *backButton = createBackButton(labels);
-    m_statusBar = createStatusBar(musicBox->getW() - backButton->getW());
+    m_statusBar = createStatusBar(vbox->getW() - backButton->getW());
     HBox *backBox = new HBox();
     backBox->addWidget(m_statusBar);
     backBox->addWidget(backButton);

@@ -284,15 +284,15 @@ label_text("menu_images", "cs", "Kvalita obrázků");
 label_text("menu_images", "fr", "Qualité des images");
 label_text("menu_images", "de", "Bildqualität");
 
-label_text("menu_images_aa", "en", "Smooth anti-aliased images (default)");
-label_text("menu_images_aa", "cs", "Hladké vyhlazené obrázky (výchozí)");
-label_text("menu_images_aa", "fr", "Images anti-aliasées (par défaut)");
-label_text("menu_images_aa", "de", "Glatte Bildqualität (Standard)");
+label_text("menu_images_aa", "en", "Anti-aliased\nimages (default)");
+label_text("menu_images_aa", "cs", "Vyhlazené\nobrázky (výchozí)");
+label_text("menu_images_aa", "fr", "Images\nanti-alias (défaut)");
+label_text("menu_images_aa", "de", "Geglättete\nBilder (Standard)");
 
-label_text("menu_images_original", "en", "Original pixel art images");
-label_text("menu_images_original", "cs", "Původní obrázky v pixel artu");
-label_text("menu_images_original", "fr", "Images originales pixel art");
-label_text("menu_images_original", "de", "Originale Pixel-Art-Bilder");
+label_text("menu_images_original", "en", "Original\npixel art");
+label_text("menu_images_original", "cs", "Původní\npixel art");
+label_text("menu_images_original", "fr", "Pixel art\noriginal");
+label_text("menu_images_original", "de", "Originale\nPixel-Art");
 
 label_text("menu_back", "en", "Back");
 label_text("menu_back", "cs", "Zpět");

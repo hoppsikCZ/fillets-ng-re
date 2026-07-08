@@ -55,9 +55,6 @@ void OptionAgent::own_init() {
     prepareVersion();
     prepareDataPaths();
     prepareLang();
-    if (!getParam("userdir").empty()) {
-        readUserConfig();
-    }
 }
 //-----------------------------------------------------------------
 /**
