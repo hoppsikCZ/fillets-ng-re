@@ -47,7 +47,7 @@ void InputAgent::own_update() {
             }
             case SDL_KEYDOWN:
                 m_keyBinder->keyDown(event.key.keysym);
-                if (m_handler) {
+                if (m_handler && event.key.repeat == 0) {
                     m_handler->keyEvent(KeyStroke(event.key.keysym));
                 }
                 break;

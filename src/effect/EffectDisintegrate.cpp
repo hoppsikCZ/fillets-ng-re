@@ -11,6 +11,7 @@
 #include "SurfaceLock.h"
 #include "PixelTool.h"
 #include "Random.h"
+#include "GameClock.h"
 
 const char *EffectDisintegrate::NAME = "disintegrate";
 //-----------------------------------------------------------------
@@ -18,7 +19,7 @@ const char *EffectDisintegrate::NAME = "disintegrate";
  * Start as not disintegrated.
  */
 EffectDisintegrate::EffectDisintegrate() {
-    m_disint = DISINT_START;
+    m_disint = DISINT_START * GameClock::instance()->getSpeedup();
 }
 
 //-----------------------------------------------------------------
@@ -56,7 +57,7 @@ void EffectDisintegrate::blit(SDL_Surface *screen, SDL_Surface *surface,
         for (int px = 0; px < surface->w; ++px) {
             if (Random::aByte(py * surface->w + px) < m_disint) {
                 SDL_Color pixel = PixelTool::getColor(surface, px, py);
-                if (pixel.a == 255) {
+                if (pixel.a > ALPHA_THRESHOLD) {
                     PixelTool::putColor(screen, x + px, y + py, pixel);
                 }
             }

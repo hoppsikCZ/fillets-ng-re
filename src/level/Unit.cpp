@@ -92,16 +92,17 @@ char Unit::mySymbol(SDL_Keycode key) const {
  * @return symbol or SYM_NONE for unknown key
  */
 char Unit::mySymbolBorrowed(SDL_Keycode key, const KeyControl &buttons) const {
-    if (key == buttons.getLeft()) {
+    SDL_Scancode scancode = SDL_GetScancodeFromKey(key);
+    if (scancode == buttons.getLeft()) {
         return m_symbols.getLeft();
     }
-    if (key == buttons.getRight()) {
+    if (scancode == buttons.getRight()) {
         return m_symbols.getRight();
     }
-    if (key == buttons.getUp()) {
+    if (scancode == buttons.getUp()) {
         return m_symbols.getUp();
     }
-    if (key == buttons.getDown()) {
+    if (scancode == buttons.getDown()) {
         return m_symbols.getDown();
     }
     return ControlSym::SYM_NONE;

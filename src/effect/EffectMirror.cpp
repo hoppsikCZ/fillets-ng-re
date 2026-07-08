@@ -33,7 +33,7 @@ void EffectMirror::blit(SDL_Surface *screen, SDL_Surface *surface, int x, int y)
                                                        x - px + MIRROR_BORDER, y + py);
                 PixelTool::putColor(screen, x + px, y + py, sample);
             } else {
-                if (pixel.a == 255) {
+                if (pixel.a > ALPHA_THRESHOLD) {
                     PixelTool::putColor(screen, x + px, y + py, pixel);
                 }
             }
