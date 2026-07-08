@@ -229,7 +229,7 @@ int script_model_setAnim(lua_State *L) throw() {
     BEGIN_NOEXCEPTION ;
         int model_index = luaL_checkinteger(L, 1);
         const char *anim_name = luaL_checkstring(L, 2);
-        int phase = luaL_checkinteger(L, 3);
+        int phase = (int)luaL_checknumber(L, 3);
 
         Cube *model = getModel(L, model_index);
         model->anim()->setAnim(anim_name, phase);
