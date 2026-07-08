@@ -16,11 +16,14 @@
 //-----------------------------------------------------------------
 /**
  * Create slider for this param and optinaly specify min and max value.
+ * @param pixelsPerValue pixels per unit step (default 2)
  */
-Slider::Slider(const std::string &param, int minValue, int maxValue)
+Slider::Slider(const std::string &param, int minValue, int maxValue,
+               int pixelsPerValue)
         : m_param(param) {
     m_min = minValue;
     m_max = maxValue;
+    m_pixelsPerValue = pixelsPerValue;
 }
 //-----------------------------------------------------------------
 /**
@@ -29,9 +32,9 @@ Slider::Slider(const std::string &param, int minValue, int maxValue)
  */
 int Slider::value2slide(int value) {
     int slide = value - m_min;
-    slide = max(slide, m_min);
-    slide = min(slide, m_max);
-    return slide * PIXELS_PER_VALUE;
+    slide = max(slide, 0);
+    slide = min(slide, m_max - m_min);
+    return slide * m_pixelsPerValue;
 }
 //-----------------------------------------------------------------
 /**
@@ -39,9 +42,8 @@ int Slider::value2slide(int value) {
  * @return integer value
  */
 int Slider::slide2value(int slide) {
-    int value = slide + m_min;
-    double fraction = static_cast<double>(value) / PIXELS_PER_VALUE;
-    return static_cast<int>(fraction + 0.5);
+    double fraction = static_cast<double>(slide) / m_pixelsPerValue;
+    return static_cast<int>(fraction + 0.5) + m_min;
 }
 
 //-----------------------------------------------------------------

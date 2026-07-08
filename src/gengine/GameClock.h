@@ -23,7 +23,7 @@ public:
 
     int getTick() const { return m_tick; }
     int getSpeedup() const { return m_speedup; }
-    int getOffset() const { return m_offset; }
+    int getOffset() const;
     bool isMovingfish() const { return m_movingfish; }
 
     void setMovingfish(bool moving) { m_movingfish = moving; }

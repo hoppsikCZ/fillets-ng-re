@@ -36,6 +36,8 @@ private:
 
     IWidget *createSubtitlesPanel(const Labels &labels);
 
+    IWidget *createImagesPanel(const Labels &labels);
+
     IWidget *createBackButton(const Labels &labels);
 
     WiStatusBar *createStatusBar(int width);

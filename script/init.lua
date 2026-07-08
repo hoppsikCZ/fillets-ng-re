@@ -29,6 +29,11 @@ if getParam("speech") == nil then
     setParam("speech", "cs")
 end
 
+--NOTE: default images are 'aa' (processed with border+blur)
+if getParam("images") == nil then
+    setParam("images", "aa")
+end
+
 --- Prints global score.
 -- Usable from debug console.
 function score()

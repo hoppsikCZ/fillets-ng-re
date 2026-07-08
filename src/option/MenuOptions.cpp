@@ -49,6 +49,7 @@ MenuOptions::~MenuOptions() {
  */
 void MenuOptions::own_initState() {
     registerWatcher("lang");
+    registerWatcher("images");
     own_resumeState();
 }
 //-----------------------------------------------------------------
@@ -105,6 +106,8 @@ void MenuOptions::prepareMenu() {
     vbox->addWidget(createSpeechPanel(labels));
     vbox->addWidget(new WiSpace(0, 5));
     vbox->addWidget(createSubtitlesPanel(labels));
+    vbox->addWidget(new WiSpace(0, 5));
+    vbox->addWidget(createImagesPanel(labels));
 
     IWidget *backButton = createBackButton(labels);
     m_statusBar = createStatusBar(musicBox->getW() - backButton->getW());
@@ -203,9 +206,26 @@ MenuOptions::createStatusBar(int width) {
     return new WiStatusBar(new_font, color, width);
 }
 //-----------------------------------------------------------------
+IWidget *
+MenuOptions::createImagesPanel(const Labels &labels) {
+    HBox *imagesBox = new HBox();
+    imagesBox->addWidget(new WiPicture(
+            Path::dataReadPath("images/menu/images.png")));
+    imagesBox->addWidget(new WiSpace(10, 0));
+    RadioBox *aa = new RadioBox("images", "aa",
+            Path::dataReadPath("images/menu/images/aa.png"));
+    aa->setTip(labels.getLabel("menu_images_aa"));
+    imagesBox->addWidget(aa);
+    RadioBox *orig = new RadioBox("images", "original",
+            Path::dataReadPath("images/menu/images/original.png"));
+    orig->setTip(labels.getLabel("menu_images_original"));
+    imagesBox->addWidget(orig);
+    imagesBox->setTip(labels.getLabel("menu_images"));
+    return imagesBox;
+}
+//-----------------------------------------------------------------
 /**
  * Start level under pressed button.
- * Start pedometer when level is solved already.
  */
 void MenuOptions::mouseButton(const MouseStroke &stroke) {
     m_container->mouseButton(stroke);
@@ -227,7 +247,7 @@ void MenuOptions::drawOn(SDL_Surface *screen, SDL_Renderer *renderer) {
 void MenuOptions::receiveString(const StringMsg *msg) {
     if (msg->equalsName("param_changed")) {
         std::string param = msg->getValue();
-        if ("lang" == param) {
+        if ("lang" == param || "images" == param) {
             m_needRefresh = true;
         } else {
             throw UnknownMsgException(msg);

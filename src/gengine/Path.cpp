@@ -72,10 +72,25 @@ Path Path::dataWritePath(const std::string &file) {
 /**
  * Return path to system file.
  * Path does not need to exist.
+ * Respects "images" param: if set to "original", redirects
+ * images/ paths to images-baseline/ for unprocessed sprites,
+ * falling back to images/ if the file doesn't exist there.
  */
 Path Path::dataSystemPath(const std::string &file) {
     std::string systemdir = OptionAgent::agent()->getParam("systemdir");
     systemdir = "..";
+
+    std::string imagesMode = OptionAgent::agent()->getParam("images");
+    if ("original" == imagesMode) {
+        static const std::string prefix = "images/";
+        if (file.compare(0, prefix.size(), prefix) == 0) {
+            std::string altFile = "images-baseline/" + file.substr(prefix.size());
+            Path altPath = constructPath(systemdir, altFile);
+            if (altPath.exists()) {
+                return altPath;
+            }
+        }
+    }
 
     return constructPath(systemdir, file);
 }

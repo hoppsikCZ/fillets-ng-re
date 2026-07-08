@@ -8,7 +8,7 @@
  */
 class Slider : public IWidget {
 private:
-    static const int PIXELS_PER_VALUE = 2;
+    int m_pixelsPerValue;
     static const int HEIGHT = 30;
     std::string m_param;
     int m_min;
@@ -22,9 +22,10 @@ private:
     virtual void own_mouseButton(const MouseStroke &stroke);
 
 public:
-    Slider(const std::string &param, int minValue = 0, int maxValue = 100);
+    Slider(const std::string &param, int minValue = 0, int maxValue = 100,
+           int pixelsPerValue = 2);
 
-    virtual int getW() const { return (m_max - m_min) * PIXELS_PER_VALUE; }
+    virtual int getW() const { return (m_max - m_min) * m_pixelsPerValue; }
 
     virtual int getH() const { return HEIGHT; }
 
