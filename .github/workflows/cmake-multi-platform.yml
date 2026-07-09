@@ -1,0 +1,100 @@
+name: CMake on multiple platforms
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        build_type: [Release]
+        c_compiler: [gcc]
+        include:
+          - os: windows-latest
+            c_compiler: cl
+            cpp_compiler: cl
+          - os: ubuntu-latest
+            c_compiler: gcc
+            cpp_compiler: g++
+        exclude:
+          - os: windows-latest
+            c_compiler: gcc
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt update
+        sudo apt install -y libsdl2-dev libsdl2-image-dev \
+          libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-gfx-dev liblua5.4-dev
+
+    - name: Setup vcpkg (Windows)
+      if: runner.os == 'Windows'
+      uses: friendlyanon/setup-vcpkg@v1
+      with:
+        triplet: x64-windows
+
+    - name: Install dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: vcpkg install sdl2 sdl2-image sdl2-mixer sdl2-ttf sdl2-gfx lua
+
+    - name: Set reusable strings
+      id: strings
+      shell: bash
+      run: |
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+    - name: Configure CMake
+      run: >
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        ${{ runner.os == 'Windows' && '-DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake' || '' }}
+        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -S ${{ github.workspace }}
+
+    - name: Build
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+
+    - name: Package
+      shell: bash
+      run: |
+        mkdir -p staging
+        cp ${{ steps.strings.outputs.build-output-dir }}/fillets${{ runner.os == 'Windows' && '.exe' || '' }} staging/
+        cp -r images images-baseline script music sound font staging/
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: fillets-ng-re-${{ runner.os }}
+        path: staging/*
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install dependencies
+      run: brew install sdl2 sdl2_image sdl2_mixer sdl2_ttf sdl2_gfx lua
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+    - name: Build
+      run: cmake --build build
+    - name: Package
+      run: |
+        mkdir -p staging
+        cp build/fillets staging/
+        cp -r images images-baseline script music sound font staging/
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: fillets-ng-re-macOS
+        path: staging/*
