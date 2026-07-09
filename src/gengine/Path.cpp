@@ -78,7 +78,7 @@ Path Path::dataWritePath(const std::string &file) {
  */
 Path Path::dataSystemPath(const std::string &file) {
     std::string systemdir = OptionAgent::agent()->getParam("systemdir");
-    systemdir = "..";
+    if (systemdir.empty()) systemdir = ".";
 
     std::string imagesMode = OptionAgent::agent()->getParam("images");
     if ("original" == imagesMode) {
