@@ -19,6 +19,17 @@ file(GLOB_RECURSE fillets_SRC CONFIGURE_DEPENDS "src/*.cpp")
 list(FILTER fillets_SRC EXCLUDE REGEX ".*FsPath_boost\.cpp$")
 add_executable(fillets ${fillets_SRC})
 
+# ---------------------------------------------------------
+# FIX: Prioritize local source directories before anything else
+# Removed the SYSTEM keyword and added BEFORE.
+# ---------------------------------------------------------
+file(GLOB fillets_INCLUDE_DIRS LIST_DIRECTORIES true "src/*/")
+
+foreach(dir ${fillets_INCLUDE_DIRS})
+    target_include_directories(fillets BEFORE PRIVATE ${dir})
+endforeach()
+# ---------------------------------------------------------
+
 # Find Lua
 find_package(Lua REQUIRED)
 target_include_directories(fillets PRIVATE ${LUA_INCLUDE_DIR})
@@ -36,6 +47,13 @@ if(UNIX)
     pkg_check_modules(SDL2_TTF REQUIRED SDL2_ttf)
     pkg_check_modules(SDL2_GFX REQUIRED SDL2_gfx)
     pkg_check_modules(SDL2_MIXER REQUIRED SDL2_mixer)
+
+    if(APPLE)
+        # Homebrew sdl2-compat (SDL2-on-SDL3 shim) doesn't ship SDL2main
+        list(FILTER SDL2_LIBRARIES EXCLUDE REGEX "SDL2main")
+        # Homebrew paths aren't in the default linker search path
+        target_link_directories(fillets PRIVATE ${SDL2_LIBRARY_DIRS})
+    endif()
 
     target_include_directories(fillets PRIVATE
         ${SDL2_IMAGE_INCLUDE_DIRS}
@@ -71,12 +89,6 @@ elseif(WIN32)
         ${LUA_LIBRARIES}
     )
 endif()
-
-file(GLOB fillets_INCLUDE_DIRS LIST_DIRECTORIES true "src/*/")
-
-foreach(dir ${fillets_INCLUDE_DIRS})
-    target_include_directories(fillets SYSTEM PRIVATE ${dir})
-endforeach()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
