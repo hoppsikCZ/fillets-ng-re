@@ -31,6 +31,7 @@ if(UNIX)
     target_compile_definitions(fillets PRIVATE PLATFORM_UNIX)
 
     find_package(PkgConfig REQUIRED)
+    pkg_check_modules(SDL2 REQUIRED sdl2)
     pkg_check_modules(SDL2_IMAGE REQUIRED SDL2_image)
     pkg_check_modules(SDL2_TTF REQUIRED SDL2_ttf)
     pkg_check_modules(SDL2_GFX REQUIRED SDL2_gfx)
