@@ -84,7 +84,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: fillets-ng-re-${{ runner.os }}
+        name: fillets-ng-re-Linux-Ubuntu
         path: staging/*
 
   build-macos:
@@ -115,4 +115,37 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: fillets-ng-re-macOS
+          path: staging/*
+
+  build-arch:
+    name: Build on Arch Linux
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          pacman-key --init
+          pacman-key --populate archlinux
+          pacman -Sy --noconfirm archlinux-keyring
+          pacman -S --noconfirm cmake pkg-config sdl2 sdl2_image \
+            sdl2_mixer sdl2_ttf sdl2_gfx lua git base-devel
+
+      - name: Configure CMake
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build -j$(nproc)
+
+      - name: Package
+        run: |
+          mkdir -p staging
+          cp build/fillets staging/
+          cp -r images images-baseline script music sound font staging/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fillets-ng-re-Linux-Arch
           path: staging/*
