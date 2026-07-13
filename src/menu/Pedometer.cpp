@@ -21,6 +21,7 @@
 #include "minmax.h"
 #include "StringMsg.h"
 #include "UnknownMsgException.h"
+#include "GameClock.h"
 
 //-----------------------------------------------------------------
 Pedometer::Pedometer(LevelStatus *status, Level *new_level) {
@@ -170,6 +171,10 @@ void Pedometer::drawNumbers(SDL_Surface *screen, int value) {
     static const int POS_Y = 177;
     static const int SHIFT_SPEED = 8;
 
+    if (GameClock::instance()->getTick() % GameClock::instance()->getSpeedup() == 0) {
+        m_meterPhase += CIPHERS;
+    }
+
     int numberWidth = m_numbers->w;
     int numberHeight = m_numbers->h / 10;
 
@@ -179,7 +184,6 @@ void Pedometer::drawNumbers(SDL_Surface *screen, int value) {
         int x = POS_X + numberWidth * i;
         int shiftY = max(numberHeight * (9 - cipher),
                          numberHeight * 9 - SHIFT_SPEED * m_meterPhase);
-        m_meterPhase++;
 
         drawNumber(screen, x, POS_Y, shiftY);
     }
