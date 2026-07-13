@@ -184,23 +184,26 @@ local function prog_init()
 
         vypinac.stav = 0
         local afterLoad = true
+        local prev_x
 
         return function()
             if afterLoad then
                 afterLoad = false
+                prev_x = vypinac.X
                 return
             end
 
             switch(vypinac.stav){
                 [0] = function()
-                    if (vypinac.dir == dir_left or vypinac.dir == dir_right) and level_isNewRound() then
-                        vypinac.stav = vypinac.stav + 1
+                    if vypinac.X ~= prev_x then
+                        prev_x = vypinac.X
+                        vypinac.stav = 1
                         vypinac.afaze = 1
                         vypinac:talk("ch-x-click1")
                     end
                 end,
                 [1] = function()
-                    vypinac.stav = vypinac.stav + 1
+                    vypinac.stav = 2
                     vypinac.afaze = 2
                     room.dark = true
                     room.bliknul = room.bliknul + 1
@@ -209,7 +212,8 @@ local function prog_init()
                     end
                 end,
                 [2] = function()
-                    if (vypinac.dir == dir_left or vypinac.dir == dir_right) and level_isNewRound() then
+                    if vypinac.X ~= prev_x then
+                        prev_x = vypinac.X
                         vypinac.stav = 0
                         vypinac.afaze = 0
                         room.dark = false
@@ -221,6 +225,7 @@ local function prog_init()
                     end
                 end,
             }
+
             vypinac:updateAnim()
         end
     end
