@@ -17,6 +17,7 @@
 #include "OptionAgent.h"
 #include "VideoAgent.h"
 #include "SurfaceTool.h"
+#include "GameClock.h"
 
 #include "demo-script.h"
 
@@ -49,8 +50,10 @@ void DemoMode::own_initState() {
  * Execute next demo command.
  */
 void DemoMode::own_updateState() {
-    if (satisfyPlan()) {
-        quitState();
+    if (GameClock::instance()->getTick() % GameClock::instance()->getSpeedup() == 0) {
+        if (satisfyPlan()) {
+            quitState();
+        }
     }
 }
 
